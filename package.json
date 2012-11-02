@@ -1,0 +1,26 @@
+{
+  "name": "toposort",
+  "version": "0.1.0",
+  "description": "Topologically sort directed graphs (like dependecy lists)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcelklehr/node-toposort.git"
+  },
+  "keywords": [
+    "topological",
+    "sort",
+    "sorting",
+    "graphs",
+    "graph",
+    "dependency",
+    "list",
+    "dependencies"
+  ],
+  "author": "Marcel Klehr <mklehr@gmx.net>",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}

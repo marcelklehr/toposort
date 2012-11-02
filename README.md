@@ -1,4 +1,5 @@
 # Sort directed graphs
+`npm install toposort`
 
 ## Example
 Let's say, you have a list of plugins, which depend on each other:
