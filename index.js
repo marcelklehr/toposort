@@ -1,5 +1,12 @@
 module.exports = toposort;
 
+/**
+ * Topological sorting
+ * @param idProp {String} The property of the objects in `edges`, which should be used as the identifier
+ * @param ancestryProp {String} The property of the objects in `edges`, which should be used as the ancestry list
+ * @param edges {Array} A list of objects that have both properties.
+ * @returns {Array} a list of identifiers, sorted by their ancestry
+ */
 function toposort(idProp, ancestryProp, edges) {
    var nodes = {} // a hash of id=>node
      , sorted = [] // sorted list of ids
