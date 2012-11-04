@@ -1,4 +1,7 @@
 # Sorting directed acyclic graphs
+[![Build Status](https://travis-ci.org/marcelklehr/beardless.png)](https://travis-ci.org/marcelklehr/beardless)
+
+## Installation
 `npm install toposort`
 
 ## Example
