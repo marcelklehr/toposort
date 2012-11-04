@@ -69,5 +69,8 @@ Output:
 
 Returns: {Array} a list of nodes, sorted by their dependency (following edge direction as descendancy)
 
+## Tests
+Run the tests with `node test.js`.
+
 ## Legal
 MIT License
