@@ -26,55 +26,36 @@
 module.exports = toposort;
 
 /**
- * Topological sorting
- * @param idProp {String} The property of the objects in `edges`, which should be used as the identifier
- * @param ancestryProp {String} The property of the objects in `edges`, which should be used as the ancestry list
- * @param edges {Array} A list of objects that have both properties.
- * @returns {Array} a list of identifiers, sorted by their ancestry
+ * Topological sorting function
+ * @param edges {Array} An array of edges like [node1, node2]
+ * @returns {Array} a list of nodes, sorted by their dependency (following edge direction as descendancy)
  */
-function toposort(idProp, ancestryProp, edges) {
-   var nodes = {} // a hash of id=>node
+function toposort(edges) {
+   var nodes = [] // a list of id=>node
      , sorted = [] // sorted list of ids
-     , visited = {} // hash: id=>bool
 
   // list all nodes by id
   edges.forEach(function(edge) {
-    nodes[getId(edge)] = edge;
-  })
-
-  // topologically sort the nodes by ancestry
-  edges.forEach(function visit(node, ancestors) {
-    if (!Array.isArray(ancestors)) ancestors = []
-    
-    var id = getId(node)
-
-    // if we already visited this, do nothing
-    if (visited[id]) return;
-
-    ancestors.push(id) // ancestor list gets passed to all ancestors
-    visited[id] = true
-
-    getAncestors(node).forEach(function(ancestor) {
-      // if already in ancestors, a cyclic dependency exists.
-      if (ancestors.indexOf(ancestor) >= 0) {
-        throw new Error('Cyclic dependency : ' + ancestor + ' depends on ' + id +', but is a dependency of it.')
-      }
-      
-      // recursively apply 'visit' to all ancestors
-      visit(nodes[ancestor], ancestors.map(function(o){return o}))
+    edge.forEach(function insertNode (n) {
+      if(nodes.indexOf(n) > 0) return;
+      nodes.push(n)
     })
-
-    sorted.unshift(id)
   })
-
+  
+  while (nodes.length > 0) {
+    var cyclic = true
+    nodes.forEach(function(n) {
+      // go on, if some edges point to this node
+      if (edges.some(function(e) { return e[1] == n; })) return;
+      
+      // remove this node
+      nodes.splice(nodes.indexOf(n), 1)
+      
+      edges = edges.filter(function(e) { return !(e[0] == n)})
+      cyclic = false
+      sorted.push(n)
+    })
+    if (cyclic) throw new Error('Cyclic dependency couldn\'t be resolved.')
+  }
   return sorted;
-  
-  
-  function getId(obj) {
-    return obj[idProp]
-  }
-  
-  function getAncestors(obj) {
-    return obj[ancestryProp]
-  }
 }

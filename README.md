@@ -1,4 +1,4 @@
-# Sort directed graphs
+# Sorting directed acyclic graphs
 `npm install toposort`
 
 ## Example
@@ -14,14 +14,31 @@ var plugins =
 ```
 `depends` defines plugins that should be executed before the plugin that declares the directive.
 
-A quick analysis, will result in the following dependency (and thus execution) flow:
+A quick analysis, will result in the following dependency tree:
 
 ```
-ron
- - bar
-   - john
-     - tom
-   - foo
+tom
+ |
+john  foo
+ |     |
+ - - - - 
+    |
+   bar
+    |
+   ron
+```
+
+and thus the following execution flow:
+
+```
+   ron
+    |
+   bar
+ - - - - 
+ |     |
+john  foo
+ |
+tom
 ```
 
 Let's try this with `toposort`:
@@ -29,18 +46,15 @@ Let's try this with `toposort`:
 toposort = require('toposort')
 
 var plugins =
-[ {name: "foo", depends: ['bar']}
-, {name: "bar", depends: ["ron"]}
-, {name: "john", depends: ["bar"]}
-, {name: "tom", depends: ["john"]}
-, {name: "ron", depends: []}
+[ ["foo", 'bar']
+, ["bar", "ron"]
+, ["john", "bar"]
+, ["tom", "john"]
 ]
 
-var result = toposort('name', 'depends', plugins)
-
-// we reverse the resulting list, because
-// toposort assumes ancestry, but we want descendancy
-console.dir(result.reverse())
+var results = toposort(plugins)// this will output the dependency flow
+results.reverse()// to get the resulting execution flow, we reverse the results
+console.dir(results)
 ```
 
 Output:
@@ -50,12 +64,10 @@ Output:
 
 ## API
 
-### toposort(idProperty, ancestryProperty, list)
- * idProperty {String} The property of the objects in the `list`, which should be used as the identifier
- * ancestryProperty {String} The property of the objects in `list`, which should be used as the ancestry list
- * list {Array} A list of objects that have both properties.
+### toposort(edges)
+ * edges {Array} An array of edges like [node1, node2]
 
-Returns a list of identifiers, sorted by their ancestry.
+Returns: {Array} a list of nodes, sorted by their dependency (following edge direction as descendancy)
 
 ## Legal
 MIT License
