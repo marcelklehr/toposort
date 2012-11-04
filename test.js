@@ -7,15 +7,41 @@ suite.addBatch(
 { 'acyclic graphs':
   { topic: function() {
       return toposort(
-      [ ["foo", 'bar']
-      , ["bar", "ron"]
-      , ["john", "bar"]
-      , ["tom", "john"]
+      [ ["3", '2']
+      , ["2", "1"]
+      , ["6", "5"]
+      , ["5", "2"]
+      , ["5", "4"]
       ])
+      /*(read downwards)
+      6  3
+      |  |
+      5->2
+      |  |
+      4  1
+      */
     }
-  , 'should be sorted correctly': function(er, sorted) {
-      assert.ifError(er)
-      assert.deepEqual(sorted, [ 'foo','tom','john','bar','ron' ])
+  , 'should be sorted correctly': function(er, result) {
+      assert.instanceOf(result, Array)
+      var failed = [], passed
+      ;[ [ '3','6','5','2','1','4' ]
+      , [ '3','6','5','2','4','1' ]
+      , [ '6','3','5','2','1','4' ]
+      , [ '6','5','3','2','1','4' ]
+      , [ '6','5','3','2','4','1' ]
+      , [ '6','5', '4','3','2','1' ]
+      ].forEach(function(solution) {
+        try {
+          assert.deepEqual(result, solution)
+          passed = true
+        }catch (e) {
+          failed.push(e)
+        }
+      })
+      if (!passed) {
+        console.log(failed)
+        throw failed[0];
+      }
     }
   }
 , 'cyclic graphs':
