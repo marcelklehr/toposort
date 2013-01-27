@@ -5,7 +5,7 @@
 `npm install toposort`
 
 ## Example
-Let's say, you have a list of pluginsor tasks, which depend on each other (`depends` defines plugins or tasks that should be executed before the plugin that declares the directive):
+Let's say, you have a list of plugins or tasks, which depend on each other (`depends` defines plugins or tasks that should be executed before the plugin that declares the directive):
 
 ```
 var plugins =
@@ -74,7 +74,7 @@ Output:
 ## API
 
 ### toposort(edges)
- * edges {Array} An array of directed vertices like `[node1, node2]` (where `node1` depends on `node2`)
+ * edges {Array} An array of directed vertices like `[node1, node2]` (where `node1` depends on `node2`) -- these needn't be strings but can be any of any type
 
 Returns: {Array} a list of nodes, sorted by their dependency (following edge direction as descendancy)
 
