@@ -37,7 +37,7 @@ function toposort(edges) {
   // list all nodes by id
   edges.forEach(function(edge) {
     edge.forEach(function insertNode (n) {
-      if(nodes.indexOf(n) > 0) return;
+      if(nodes.indexOf(n) >= 0) return;
       nodes.push(n)
     })
   })
