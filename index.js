@@ -56,14 +56,14 @@ function toposort(edges) {
       nodes.splice(nodes.indexOf(node), 1)
       if (predecessors.length == 0) i--;
       
-      predsCopy = predecessors.map(function(n) {return n})
+      var predsCopy = predecessors.map(function(n) {return n})
       predsCopy.push(node)
       
       edges
         .filter(function(e) { return e[0] === node })
         .forEach(function(e) {
           // visit all dependencies of this node
-          // and provide them with a *copy* of their predecessors
+          // and provide them with a *copy* of their predecessors (including *this* node)
           visit(e[1], predsCopy)
         })
       sorted.unshift(node)
