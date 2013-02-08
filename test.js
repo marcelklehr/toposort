@@ -58,6 +58,14 @@ suite.addBatch(
       assert.instanceOf(val, Error)
     }
   }
+, 'triangular dependency':
+  { topic: function() {
+      return toposort([['a', 'b'], ['a', 'c'], ['b', 'c']]);
+    }
+  , 'shouldn\'t throw an error': function(er, result) {
+      assert.deepEqual(result, ['a', 'b', 'c'])
+    }
+  }
 })
 .run(null, function() {
   (suite.results.broken+suite.results.errored) > 0 && process.exit(1)
