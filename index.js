@@ -42,26 +42,24 @@ function toposort(edges) {
     })
   })
 
-  for (var i=0; i < nodes.length; i++) {
-    visit(nodes, nodes[i])
-  }
-  
+  while (nodes.length > 0)
+    visit(nodes[0], null, edges, nodes, sorted)
+
   return sorted;
 }
 
-function visit(nodes, node, predecessors) {
+function visit(node, predecessors, edges, nodes, sorted) {
   if (!predecessors) predecessors = []
   else // The node is a dependency of itself?! I'd say, we're free to throw
   if(predecessors.indexOf(node) > 0)
    throw new Error('Cyclic dependency! The following node is a dependency of itself: '+JSON.stringify(node))
-  
+
   // if it's not in nodes[] anymore, we've already had this node
   if (nodes.indexOf(node) < 0) return;
   
   // remove this node from nodes[]
   nodes.splice(nodes.indexOf(node), 1)
-  if (predecessors.length == 0) i--;
-  
+
   var predsCopy = predecessors.map(function(n) {return n})
   predsCopy.push(node)
   
@@ -70,8 +68,8 @@ function visit(nodes, node, predecessors) {
    .forEach(function(e) {
      // visit all dependencies of this node
      // and provide them with a *copy* of their predecessors (including *this* node)
-     visit(e[1], predsCopy)
+     visit(e[1], predsCopy, edges, nodes, sorted)
    })
-   
+
   sorted.unshift(node)
 }
