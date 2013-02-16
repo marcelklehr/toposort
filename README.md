@@ -1,8 +1,8 @@
 # Sorting directed acyclic graphs
-[![Build Status](https://travis-ci.org/marcelklehr/node-toposort.png)](https://travis-ci.org/marcelklehr/node-toposort)
+[![Build Status](https://travis-ci.org/marcelklehr/toposort.png)](https://travis-ci.org/marcelklehr/toposort)
 
 ## Installation
-`npm install toposort`
+`npm install toposort` or `component install toposort`
 
 ## Example
 Let's say, you have a list of plugins or tasks, which depend on each other (`depends` defines plugins or tasks that should be executed before the plugin that declares the directive):
