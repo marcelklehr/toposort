@@ -43,31 +43,35 @@ function toposort(edges) {
   })
 
   for (var i=0; i < nodes.length; i++) {
-    (function visit(node, predecessors) {
-      if (!predecessors) predecessors = []
-      else // The node is a dependency of itself?! I'd say, we're free to throw
-      if(predecessors.indexOf(node) > 0)
-        throw new Error('Cyclic dependency! The following node is a dependency of itself: '+JSON.stringify(node))
-      
-      // if it's not in nodes[] anymore, we've already had this node
-      if (nodes.indexOf(node) < 0) return;
-      
-      // remove this node from nodes[]
-      nodes.splice(nodes.indexOf(node), 1)
-      if (predecessors.length == 0) i--;
-      
-      var predsCopy = predecessors.map(function(n) {return n})
-      predsCopy.push(node)
-      
-      edges
-        .filter(function(e) { return e[0] === node })
-        .forEach(function(e) {
-          // visit all dependencies of this node
-          // and provide them with a *copy* of their predecessors (including *this* node)
-          visit(e[1], predsCopy)
-        })
-      sorted.unshift(node)
-    })(nodes[i])
+    visit(nodes[i])
   }
+  
   return sorted;
+}
+
+function visit(node, predecessors) {
+  if (!predecessors) predecessors = []
+  else // The node is a dependency of itself?! I'd say, we're free to throw
+  if(predecessors.indexOf(node) > 0)
+   throw new Error('Cyclic dependency! The following node is a dependency of itself: '+JSON.stringify(node))
+  
+  // if it's not in nodes[] anymore, we've already had this node
+  if (nodes.indexOf(node) < 0) return;
+  
+  // remove this node from nodes[]
+  nodes.splice(nodes.indexOf(node), 1)
+  if (predecessors.length == 0) i--;
+  
+  var predsCopy = predecessors.map(function(n) {return n})
+  predsCopy.push(node)
+  
+  edges
+   .filter(function(e) { return e[0] === node })
+   .forEach(function(e) {
+     // visit all dependencies of this node
+     // and provide them with a *copy* of their predecessors (including *this* node)
+     visit(e[1], predsCopy)
+   })
+   
+  sorted.unshift(node)
 }
