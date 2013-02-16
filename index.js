@@ -43,13 +43,13 @@ function toposort(edges) {
   })
 
   for (var i=0; i < nodes.length; i++) {
-    visit(nodes[i])
+    visit(nodes, nodes[i])
   }
   
   return sorted;
 }
 
-function visit(node, predecessors) {
+function visit(nodes, node, predecessors) {
   if (!predecessors) predecessors = []
   else // The node is a dependency of itself?! I'd say, we're free to throw
   if(predecessors.indexOf(node) > 0)
