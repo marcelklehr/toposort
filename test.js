@@ -44,7 +44,18 @@ suite.addBatch(
       }
     }
   }
-, 'cyclic graphs':
+, 'simple cyclic graphs':
+  { topic: function() {
+      return toposort(
+      [ ["foo", 'bar']
+      , ["bar", "foo"]// cyclic dependecy
+      ])
+    }
+  , 'should throw an exception': function(_, val) {
+      assert.instanceOf(val, Error)
+    }
+  }
+, 'complex cyclic graphs':
   { topic: function() {
       return toposort(
       [ ["foo", 'bar']
