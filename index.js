@@ -51,7 +51,7 @@ function toposort(edges) {
 function visit(node, predecessors, edges, nodes, sorted) {
   if (!predecessors) predecessors = []
   else // The node is a dependency of itself?! I'd say, we're free to throw
-  if(predecessors.indexOf(node) > 0)
+  if(predecessors.indexOf(node) >= 0)
    throw new Error('Cyclic dependency! The following node is a dependency of itself: '+JSON.stringify(node))
 
   // if it's not in nodes[] anymore, we've already had this node
