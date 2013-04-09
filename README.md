@@ -56,9 +56,16 @@ Running it through `toposort` we get:
 var results = toposort(modules)
 
 console.dir(results)
-// => [ 'ron', 'bar', 'foo', 'john', 'tom' ]
+// => [ 'tom', 'john', 'foo', 'bar', 'ron' ]
 ```
 So `toposort` prefered the first path through the graph. Since it was the first it encountered.
+
+Now, we to get the best execution order, we can just reverse the returned array:
+
+```js
+console.dir(results.reverse())
+// => [ 'ron', 'bar', 'foo', 'john', 'tom' ]
+```
 
 ## API
 
