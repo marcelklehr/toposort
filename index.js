@@ -10,13 +10,12 @@ module.exports = toposort;
 
 function toposort(edges) {
    var nodes = uniqueNodes(edges)
-     , sorted = []
+     , index = nodes.length
+     , sorted = new Array(index)
 
-  while (nodes.length) {
-    visit(nodes[0], [])
-  }
+  while (index) visit(nodes[0], [])
 
-  return sorted.reverse()
+  return sorted
 
   function visit(node, predecessors) {
     if(predecessors.indexOf(node) >= 0) {
@@ -41,7 +40,7 @@ function toposort(edges) {
       } while (i)
     }
     
-    sorted.push(node)
+    sorted[--index] = node
   }
 }
 
