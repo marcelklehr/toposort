@@ -1,17 +1,20 @@
 
-module.exports = toposort;
-
 /**
  * Topological sorting function
- * 
+ *
  * @param {Array} edges
  * @returns {Array}
  */
 
-function toposort(edges) {
-   var nodes = uniqueNodes(edges)
-     , index = nodes.length
-     , sorted = new Array(index)
+module.exports = exports = function(edges){
+  return toposort(uniqueNodes(edges), edges)
+}
+
+exports.array = toposort
+
+function toposort(nodes, edges) {
+   var index = nodes.length
+   var sorted = new Array(index)
 
   while (index) visit(nodes[0], [])
 
@@ -23,7 +26,7 @@ function toposort(edges) {
     }
 
     var i = nodes.indexOf(node)
-    
+
     // already visited
     if (i < 0) return;
 
@@ -39,7 +42,7 @@ function toposort(edges) {
         visit(out[--i][1], preds)
       } while (i)
     }
-    
+
     sorted[--index] = node
   }
 }
