@@ -1,46 +1,50 @@
 
-module.exports = toposort;
-
 /**
  * Topological sorting function
- * 
+ *
  * @param {Array} edges
  * @returns {Array}
  */
 
-function toposort(edges) {
-   var nodes = uniqueNodes(edges)
-     , index = nodes.length
-     , sorted = new Array(index)
+module.exports = exports = function(edges){
+  return toposort(uniqueNodes(edges), edges)
+}
 
-  while (index) visit(nodes[0], [])
+exports.array = toposort
+
+function toposort(nodes, edges) {
+  var cursor = nodes.length
+    , sorted = new Array(cursor)
+    , visited = {}
+    , i = cursor
+
+  while (i--) {
+    if (!visited[i]) visit(nodes[i], i, [])
+  }
 
   return sorted
 
-  function visit(node, predecessors) {
+  function visit(node, i, predecessors) {
     if(predecessors.indexOf(node) >= 0) {
       throw new Error('Cyclic dependency: '+JSON.stringify(node))
     }
 
-    var i = nodes.indexOf(node)
-    
-    // already visited
-    if (i < 0) return;
-
-    nodes.splice(i, 1)
+    if (visited[i]) return;
+    visited[i] = true
 
     // outgoing edges
-    var out = edges.filter(function(edge){
+    var outgoing = edges.filter(function(edge){
       return edge[0] === node
     })
-    if (i = out.length) {
+    if (i = outgoing.length) {
       var preds = predecessors.concat(node)
       do {
-        visit(out[--i][1], preds)
+        var child = outgoing[--i][1]
+        visit(child, nodes.indexOf(child), preds)
       } while (i)
     }
-    
-    sorted[--index] = node
+
+    sorted[--cursor] = node
   }
 }
 

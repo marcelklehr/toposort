@@ -77,6 +77,27 @@ suite.addBatch(
       assert.deepEqual(result, ['a', 'b', 'c'])
     }
   }
+, 'toposort.array':
+  { topic: function() {
+      return toposort.array(['d', 'c', 'a', 'b'], [['a','b'],['b','c']])
+    }
+  , 'should handle imcomplete edges': function(er, result){
+      var i = result.indexOf('d')
+      assert(i >= 0)
+      result.splice(i, 1)
+      assert.deepEqual(result, ['a', 'b', 'c'])
+    }
+  }
+, 'toposort.array mutation':
+  { topic: function() {
+    var array = ['d', 'c', 'a', 'b']
+    toposort.array(array, [['a','b'],['b','c']])
+    return array
+    }
+  , 'should not mutate its arguments': function(er, result){
+     assert.deepEqual(result, ['d', 'c', 'a', 'b'])
+    }
+  }
 })
 .run(null, function() {
   (suite.results.broken+suite.results.errored) > 0 && process.exit(1)
