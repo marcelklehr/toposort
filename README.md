@@ -75,6 +75,13 @@ console.dir(results.reverse())
 
 Returns: {Array} a list of nodes, sorted from least dependencies to most
 
+### toposort.array(nodes, edges)
+
++ nodes {Array} And array of nodes
++ edges {Array} As with `toposort`. Edges doesn't neccessarily need to contain all the items in `nodes`. However, the ordering of the items you don't mention will be undefined.
+
+Returns: {Array} as per `toposort`
+
 ## Tests
 
 Run the tests with `node test.js`.
