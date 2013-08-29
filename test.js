@@ -83,9 +83,19 @@ suite.addBatch(
     }
   , 'should handle imcomplete edges': function(er, result){
       var i = result.indexOf('d')
-      assert(i > 0)
+      assert(i >= 0)
       result.splice(i, 1)
       assert.deepEqual(result, ['a', 'b', 'c'])
+    }
+  }
+, 'toposort.array mutation':
+  { topic: function() {
+    var array = ['d', 'c', 'a', 'b']
+    toposort.array(array, [['a','b'],['b','c']])
+    return array
+    }
+  , 'should not mutate its arguments': function(er, result){
+     assert.deepEqual(result, ['d', 'c', 'a', 'b'])
     }
   }
 })
