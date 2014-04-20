@@ -16,6 +16,8 @@ toposort = require('toposort')
 
 ## Usage
 
+![graph](https://raw.githubusercontent.com/marcelklehr/toposort/master/graph.jpg)
+
 ```js
 // Edges represent execution order.
 var graph = [
@@ -39,8 +41,8 @@ toposort(graph)
 // -- you could also put on your jacket after having tied your shoes...)
 ```
 
-
-It is often more convenient to specify *dependencies* instead of "sequences".
+### Sorting dependencies
+It is usually more convenient to specify *dependencies* instead of "sequences".
 ```js
 // Edges represent dependencies.
 var graph = [
