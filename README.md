@@ -15,11 +15,11 @@ toposort = require('toposort')
 ```
 
 ## Usage
-
+We want to sort the following graph.
 ![graph](https://raw.githubusercontent.com/marcelklehr/toposort/master/graph.jpg)
 
 ```js
-// Edges represent execution order.
+// First, we define our edges.
 var graph = [
   ['put on your shoes', 'tie your shoes']
 , ['put on your shirt', 'put on your jacket']
@@ -28,33 +28,43 @@ var graph = [
 ]
 
 
-// Sort the vertices topologically, to reveal a legal execution order
+// Now, sort the vertices topologically, to reveal a legal execution order.
 toposort(graph)
-
-//[ 'put on your shirt',
-//  'put on your shorts',
-//  'put on your jacket',
-//  'put on your shoes',
-//  'tie your shoes' ]
-
-// (Note that there is no defined order for graph parts that are not connected
-// -- you could also put on your jacket after having tied your shoes...)
+// [ 'put on your shirt'
+// , 'put on your shorts'
+// , 'put on your jacket'
+// , 'put on your shoes'
+// , 'tie your shoes' ]
 ```
+
+(Note that there is no defined order for graph parts that are not connected
+ -- you could also put on your jacket after having tied your shoes...)
 
 ### Sorting dependencies
 It is usually more convenient to specify *dependencies* instead of "sequences".
 ```js
-// Edges represent dependencies.
+// This time, edges represent dependencies.
 var graph = [
   ['tie your shoes', 'put on your shoes']
 , ['put on your jacket', 'put on your shirt']
 , ['put on your shoes', 'put on your shorts']
+, ['put on your jacket', 'put on your shorts']
 ]
 
-toposort(graph) // [ 'tie your shoes', 'put on your shoes', 'put on your shorts', 'put on your jacket',  'put on your shirt' ]
+toposort(graph) 
+// [ 'tie your shoes'
+// , 'put on your shoes'
+// , 'put on your jacket'
+// , 'put on your shirt'
+// , 'put on your shorts' ]
 
-// Now, Reversing the list will reveal a legal execution order.
-toposort(graph).reverse() // [ 'put on your shirt',  'put on your jacket',  'put on your shorts',  'put on your shoes',  'tie your shoes' ]
+// Now, reversing the list will reveal a legal execution order.
+toposort(graph).reverse() 
+// [ 'put on your shorts'
+// , 'put on your shirt'
+// , 'put on your jacket'
+// , 'put on your shoes'
+// , 'tie your shoes' ]
 ```
 
 ## API
