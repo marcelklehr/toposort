@@ -16,6 +16,7 @@ toposort = require('toposort')
 
 ## Usage
 We want to sort the following graph.
+
 ![graph](https://raw.githubusercontent.com/marcelklehr/toposort/master/graph.jpg)
 
 ```js
