@@ -14,73 +14,63 @@ then in your code:
 toposort = require('toposort')
 ```
 
-## Example
+## Usage
 
-Let's say you are compiling a project consisting of 5 modules. You know there are some dependencies between them so you want to figure a safe execution order to run them in. Lets assume we have tool which spits out dependency data for us:
-
-```
-var project = [
-  {name: "foo", depends: ['bar']},
-  {name: "bar", depends: ["ron"]},
-  {name: "john", depends: ["bar"]},
-  {name: "tom", depends: ["john"]},
-  {name: "ron", depends: []}
+```js
+// Edges represent execution order.
+var graph = [
+  ['put on your shoes', 'tie your shoes']
+, ['put on your shirt', 'put on your jacket']
+, ['put on your shorts', 'put on your jacket']
+, ['put on your shorts', 'put on your shoes']
 ]
+
+
+// Sort the vertices topologically, to reveal a legal execution order
+toposort(graph)
+
+//[ 'put on your shirt',
+//  'put on your shorts',
+//  'put on your jacket',
+//  'put on your shoes',
+//  'tie your shoes' ]
+
+// (Note that there is no defined order for graph parts that are not connected
+// -- you could also put on your jacket after having tied your shoes...)
 ```
 
-Which if visualized in a graph:
 
-![graph](out.png)
-
-reveals two safe execution orders:
-
-+ `ron -> bar -> foo -> john -> tom`
-+ `ron -> bar -> john -> tom -> foo`
-
-Let's see if we can get `toposort` to figure that out for us. First though we need to translate the dependency information into something it can understand. The way `toposort` understands relationships is with edges. An "edge" is a 2 item `Array` where the first item is the subject and the 2nd item is the target.  
-
-With edges our data looks like this: 
-
+It is often more convenient to specify *dependencies* instead of "sequences".
 ```js
-var modules = [
-  ["foo", "bar"],
-  ["bar", "ron"],
-  ["john", "bar"],
-  ["tom", "john"]
+// Edges represent dependencies.
+var graph = [
+  ['tie your shoes', 'put on your shoes']
+, ['put on your jacket', 'put on your shirt']
+, ['put on your shoes', 'put on your shorts']
 ]
-```
 
-Running it through `toposort` we get:
+toposort(graph) // [ 'tie your shoes', 'put on your shoes', 'put on your shorts', 'put on your jacket',  'put on your shirt' ]
 
-```js
-var results = toposort(modules)
-
-console.dir(results)
-// => [ 'tom', 'john', 'foo', 'bar', 'ron' ]
-```
-So `toposort` prefered the first path through the graph. Since it was the first it encountered.
-
-Now, we to get the best execution order, we can just reverse the returned array:
-
-```js
-console.dir(results.reverse())
-// => [ 'ron', 'bar', 'foo', 'john', 'tom' ]
+// Now, Reversing the list will reveal a legal execution order.
+toposort(graph).reverse() // [ 'put on your shirt',  'put on your jacket',  'put on your shorts',  'put on your shoes',  'tie your shoes' ]
 ```
 
 ## API
 
 ### toposort(edges)
 
-+ edges {Array} An array of directed vertices like `[node1, node2]` (where `node1` depends on `node2`) -- these needn't be strings but can be of any type
++ edges {Array} An array of directed edges describing a graph. An edge looks like this: `[node1, node2]` (vertices needn't be strings but can be of any type).
 
-Returns: {Array} a list of nodes, sorted from least dependencies to most
+Returns: {Array} a list of vertices, sorted from "start" to "end"
 
 ### toposort.array(nodes, edges)
 
 + nodes {Array} An array of nodes
-+ edges {Array} As with `toposort`. Edges doesn't necessarily need to contain all the items in `nodes`. However, the ordering of the items you don't mention will be undefined.
++ edges {Array} An array of directed edges. You don't need to mention all `nodes` here.
 
-Returns: {Array} as per `toposort`
+This is a convenience method that allows you to define nodes that may or may not be connected to any other nodes. The ordering of unconnected nodes is not defined.
+
+Returns: {Array} a list of vertices, sorted from "start" to "end"
 
 ## Tests
 
