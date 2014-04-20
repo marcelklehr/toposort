@@ -6,13 +6,6 @@ var suite = vows.describe('toposort')
 suite.addBatch(
 { 'acyclic graphs':
   { topic: function() {
-      return toposort(
-      [ ["3", '2']
-      , ["2", "1"]
-      , ["6", "5"]
-      , ["5", "2"]
-      , ["5", "4"]
-      ])
       /*(read downwards)
       6  3
       |  |
@@ -20,10 +13,18 @@ suite.addBatch(
       |  |
       4  1
       */
+      return toposort(
+      [ ["3", '2']
+      , ["2", "1"]
+      , ["6", "5"]
+      , ["5", "2"]
+      , ["5", "4"]
+      ])
     }
   , 'should be sorted correctly': function(er, result) {
       assert.instanceOf(result, Array)
       var failed = [], passed
+      // valid permutations
       ;[ [ '3','6','5','2','1','4' ]
       , [ '3','6','5','2','4','1' ]
       , [ '6','3','5','2','1','4' ]
@@ -46,6 +47,9 @@ suite.addBatch(
   }
 , 'simple cyclic graphs':
   { topic: function() {
+      /*
+      foo<->bar
+      */
       return toposort(
       [ ["foo", 'bar']
       , ["bar", "foo"]// cyclic dependecy
@@ -57,6 +61,13 @@ suite.addBatch(
   }
 , 'complex cyclic graphs':
   { topic: function() {
+      /*
+      foo
+      |
+      bar<-john
+      |     ^
+      ron->tom
+      */
       return toposort(
       [ ["foo", 'bar']
       , ["bar", "ron"]
@@ -71,7 +82,16 @@ suite.addBatch(
   }
 , 'triangular dependency':
   { topic: function() {
-      return toposort([['a', 'b'], ['a', 'c'], ['b', 'c']]);
+      /*
+      a-> b
+      |  /
+      c<-
+      */
+      return toposort([
+        ['a', 'b']
+      , ['a', 'c']
+      , ['b', 'c']
+      ]);
     }
   , 'shouldn\'t throw an error': function(er, result) {
       assert.deepEqual(result, ['a', 'b', 'c'])
@@ -81,7 +101,7 @@ suite.addBatch(
   { topic: function() {
       return toposort.array(['d', 'c', 'a', 'b'], [['a','b'],['b','c']])
     }
-  , 'should handle imcomplete edges': function(er, result){
+  , 'should include unconnected nodes': function(er, result){
       var i = result.indexOf('d')
       assert(i >= 0)
       result.splice(i, 1)
