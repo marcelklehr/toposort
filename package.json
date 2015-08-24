@@ -1,6 +1,6 @@
 {
   "name": "toposort",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Topological sort of directed ascyclic graphs (like dependecy lists)",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "https://github.com/marcelklehr/toposort.git"
   },
   "devDependencies": {
-    "vows": "*"
+    "vows": "0.7.x"
   },
   "keywords": [
     "topological",
