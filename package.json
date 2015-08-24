@@ -1,6 +1,6 @@
 {
   "name": "toposort",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Topological sort of directed ascyclic graphs (like dependecy lists)",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,5 @@
     "acyclic"
   ],
   "author": "Marcel Klehr <mklehr@gmx.net>",
-  "license": "MIT",
-  "readmeFilename": "README.md"
+  "license": "MIT"
 }
