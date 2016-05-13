@@ -80,6 +80,20 @@ suite.addBatch(
       assert.instanceOf(val, Error)
     }
   }
+, 'unknown nodes in edges':
+  { topic: function() {
+      return toposort.array(['bla']
+      [ ["foo", 'bar']
+      , ["bar", "ron"]
+      , ["john", "bar"]
+      , ["tom", "john"]
+      , ["ron", "tom"]
+      ])
+    }
+  , 'should throw an exception': function(_, val) {
+      assert.instanceOf(val, Error)
+    }
+  }
 , 'triangular dependency':
   { topic: function() {
       /*
