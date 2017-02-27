@@ -13,6 +13,7 @@
   "devDependencies": {
     "vows": "0.7.x"
   },
+  "files": ["index.js"],
   "keywords": [
     "topological",
     "sort",
