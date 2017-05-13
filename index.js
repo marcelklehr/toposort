@@ -40,7 +40,7 @@ function toposort(nodes, edges) {
     var outgoing = edges.filter(function(edge){
       return edge[0] === node
     })
-    if (i = outgoing.length) {
+    if (i === outgoing.length) {
       var preds = predecessors.concat(node)
       do {
         var child = outgoing[--i][1]
