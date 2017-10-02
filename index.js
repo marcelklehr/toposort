@@ -17,37 +17,35 @@ function toposort(nodes, edges) {
     , sorted = new Array(cursor)
     , visited = {}
     , i = cursor
-    // Better data structures make algorithm much faster.
-    , outgoingEdges = makeOutgoingEdges(edges)
-    , nodesHash = makeNodesHash(nodes)
 
   while (i--) {
-    if (!visited[i]) visit(nodes[i], i, {})
+    if (!visited[i]) visit(nodes[i], i, [])
   }
 
   return sorted
 
   function visit(node, i, predecessors) {
-    if(predecessors.hasOwnProperty(node)) {
+    if(predecessors.indexOf(node) >= 0) {
       throw new Error('Cyclic dependency: '+JSON.stringify(node))
     }
 
-    if (!nodesHash.hasOwnProperty(node)) {
+    if (!~nodes.indexOf(node)) {
       throw new Error('Found unknown node. Make sure to provided all involved nodes. Unknown node: '+JSON.stringify(node))
     }
 
     if (visited[i]) return;
     visited[i] = true
 
-    var outgoing = Object.keys(outgoingEdges[node] || {})
-
+    // outgoing edges
+    var outgoing = edges.filter(function(edge){
+      return edge[0] === node
+    })
     if (i = outgoing.length) {
-      predecessors[node] = true
+      var preds = predecessors.concat(node)
       do {
-        var child = outgoing[--i]
-        visit(child, nodesHash[child], predecessors)
+        var child = outgoing[--i][1]
+        visit(child, nodes.indexOf(child), preds)
       } while (i)
-      delete predecessors[node]
     }
 
     sorted[--cursor] = node
@@ -55,30 +53,11 @@ function toposort(nodes, edges) {
 }
 
 function uniqueNodes(arr){
-  var res = {}
+  var res = []
   for (var i = 0, len = arr.length; i < len; i++) {
     var edge = arr[i]
-    res[edge[0]] = true
-    res[edge[1]] = true
-  }
-  return Object.keys(res)
-}
-
-function makeOutgoingEdges(arr){
-  var edges = {}
-  for (var i = 0, len = arr.length; i < len; i++) {
-    var edge = arr[i]
-    edges[edge[0]] = edges[edge[0]] || {}
-    edges[edge[1]] = edges[edge[1]] || {}
-    edges[edge[0]][edge[1]] = true
-  }
-  return edges
-}
-
-function makeNodesHash(arr){
-  var res = {}
-  for (var i = 0, len = arr.length; i < len; i++) {
-    res[arr[i]] = i
+    if (res.indexOf(edge[0]) < 0) res.push(edge[0])
+    if (res.indexOf(edge[1]) < 0) res.push(edge[1])
   }
   return res
 }
