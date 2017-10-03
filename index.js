@@ -22,32 +22,33 @@ function toposort(nodes, edges) {
     , nodesHash = makeNodesHash(nodes)
 
   while (i--) {
-    if (!visited[i]) visit(nodes[i], i, {})
+    if (!visited[i]) visit(nodes[i], i, new Set())
   }
 
   return sorted
 
   function visit(node, i, predecessors) {
-    if(predecessors.hasOwnProperty(node)) {
+    if(predecessors.has(node)) {
       throw new Error('Cyclic dependency: '+JSON.stringify(node))
     }
 
-    if (!nodesHash.hasOwnProperty(node)) {
+    if (!nodesHash.has(node)) {
       throw new Error('Found unknown node. Make sure to provided all involved nodes. Unknown node: '+JSON.stringify(node))
     }
 
     if (visited[i]) return;
     visited[i] = true
 
-    var outgoing = Object.keys(outgoingEdges[node] || {})
+    var outgoing = outgoingEdges.get(node) || new Set()
+    outgoing = Array.from(outgoing)
 
     if (i = outgoing.length) {
-      predecessors[node] = true
+      predecessors.add(node)
       do {
         var child = outgoing[--i]
-        visit(child, nodesHash[child], predecessors)
+        visit(child, nodesHash.get(child), predecessors)
       } while (i)
-      delete predecessors[node]
+      predecessors.delete(node)
     }
 
     sorted[--cursor] = node
@@ -55,30 +56,30 @@ function toposort(nodes, edges) {
 }
 
 function uniqueNodes(arr){
-  var res = {}
+  var res = new Set()
   for (var i = 0, len = arr.length; i < len; i++) {
     var edge = arr[i]
-    res[edge[0]] = true
-    res[edge[1]] = true
+    res.add(edge[0])
+    res.add(edge[1])
   }
-  return Object.keys(res)
+  return Array.from(res)
 }
 
 function makeOutgoingEdges(arr){
-  var edges = {}
+  var edges = new Map()
   for (var i = 0, len = arr.length; i < len; i++) {
     var edge = arr[i]
-    edges[edge[0]] = edges[edge[0]] || {}
-    edges[edge[1]] = edges[edge[1]] || {}
-    edges[edge[0]][edge[1]] = true
+    if (!edges.has(edge[0])) edges.set(edge[0], new Set())
+    if (!edges.has(edge[1])) edges.set(edge[1], new Set())
+    edges.get(edge[0]).add(edge[1])
   }
   return edges
 }
 
 function makeNodesHash(arr){
-  var res = {}
+  var res = new Map()
   for (var i = 0, len = arr.length; i < len; i++) {
-    res[arr[i]] = i
+    res.set(arr[i], i)
   }
   return res
 }

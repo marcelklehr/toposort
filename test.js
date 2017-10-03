@@ -149,6 +149,20 @@ suite.addBatch(
      assert(elapsedSeconds < 1)
     }
   }
+, 'object keys':
+  {
+    topic: function() {
+      var o1 = {k1: 'v1', nested: {k2: 'v2'}}
+      var o2 = {k2: 'v2'}
+      var o3 = {k3: 'v3'}
+      var graph = [[o1, o2], [o2, o3]]
+      return graph
+    }
+  , 'should handle object nodes': function(er, result){
+      var sorted = toposort(result)
+      assert.deepEqual(sorted, [{k1: 'v1', nested: {k2: 'v2'}}, {k2: 'v2'}, {k3: 'v3'}])
+    }
+  }
 })
 .run(null, function() {
   (suite.results.broken+suite.results.errored) > 0 && process.exit(1)
