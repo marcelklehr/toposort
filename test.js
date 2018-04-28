@@ -82,7 +82,7 @@ suite.addBatch(
   }
 , 'unknown nodes in edges':
   { topic: function() {
-      return toposort.array(['bla']
+      return toposort.array(['bla'],
       [ ["foo", 'bar']
       , ["bar", "ron"]
       , ["john", "bar"]
