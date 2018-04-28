@@ -6,7 +6,7 @@
  * @returns {Array}
  */
 
-module.exports = function(edges){
+module.exports = function(edges) {
   return toposort(uniqueNodes(edges), edges)
 }
 
@@ -20,6 +20,13 @@ function toposort(nodes, edges) {
     // Better data structures make algorithm much faster.
     , outgoingEdges = makeOutgoingEdges(edges)
     , nodesHash = makeNodesHash(nodes)
+
+  // check for unknown nodes
+  edges.forEach(function(edge) {
+    if (!nodesHash.has(edge[0]) || !nodesHash.has(edge[1])) {
+      throw new Error('Unknown node. There is an unknown node in the supplied edges.')
+    }
+  })
 
   while (i--) {
     if (!visited[i]) visit(nodes[i], i, new Set())
