@@ -17,16 +17,19 @@ function toposort(nodes, edges) {
     , sorted = new Array(cursor)
     , visited = {}
     , i = cursor
+    // Better data structures make algorithm much faster.
+    , outgoingEdges = makeOutgoingEdges(edges)
+    , nodesHash = makeNodesHash(nodes)
 
   while (i--) {
-    if (!visited[i]) visit(nodes[i], i, [])
+    if (!visited[i]) visit(nodes[i], i, new Set())
   }
 
   return sorted
 
   function visit(node, i, predecessors) {
-    if(predecessors.indexOf(node) >= 0) {
-      var nodeRep 
+    if(predecessors.has(node)) {
+      var nodeRep
       try {
         nodeRep = ", node was:" + JSON.stringify(node)
       } catch(e) {
@@ -35,23 +38,23 @@ function toposort(nodes, edges) {
       throw new Error('Cyclic dependency' + nodeRep)
     }
 
-    if (!~nodes.indexOf(node)) {
+    if (!nodesHash.has(node)) {
       throw new Error('Found unknown node. Make sure to provided all involved nodes. Unknown node: '+JSON.stringify(node))
     }
 
     if (visited[i]) return;
     visited[i] = true
 
-    // outgoing edges
-    var outgoing = edges.filter(function(edge){
-      return edge[0] === node
-    })
+    var outgoing = outgoingEdges.get(node) || new Set()
+    outgoing = Array.from(outgoing)
+
     if (i = outgoing.length) {
-      var preds = predecessors.concat(node)
+      predecessors.add(node)
       do {
-        var child = outgoing[--i][1]
-        visit(child, nodes.indexOf(child), preds)
+        var child = outgoing[--i]
+        visit(child, nodesHash.get(child), predecessors)
       } while (i)
+      predecessors.delete(node)
     }
 
     sorted[--cursor] = node
@@ -59,11 +62,30 @@ function toposort(nodes, edges) {
 }
 
 function uniqueNodes(arr){
-  var res = []
+  var res = new Set()
   for (var i = 0, len = arr.length; i < len; i++) {
     var edge = arr[i]
-    if (res.indexOf(edge[0]) < 0) res.push(edge[0])
-    if (res.indexOf(edge[1]) < 0) res.push(edge[1])
+    res.add(edge[0])
+    res.add(edge[1])
+  }
+  return Array.from(res)
+}
+
+function makeOutgoingEdges(arr){
+  var edges = new Map()
+  for (var i = 0, len = arr.length; i < len; i++) {
+    var edge = arr[i]
+    if (!edges.has(edge[0])) edges.set(edge[0], new Set())
+    if (!edges.has(edge[1])) edges.set(edge[1], new Set())
+    edges.get(edge[0]).add(edge[1])
+  }
+  return edges
+}
+
+function makeNodesHash(arr){
+  var res = new Map()
+  for (var i = 0, len = arr.length; i < len; i++) {
+    res.set(arr[i], i)
   }
   return res
 }
