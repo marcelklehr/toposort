@@ -136,7 +136,7 @@ suite.addBatch(
   {
     topic: function() {
       var graph = []
-        , nodeCount = 10000
+        , nodeCount = 100000
       for (var i = 0; i < nodeCount; i++) {
         graph.push([i, i + 1])
       }
