@@ -2,7 +2,7 @@
 
 Sort directed acyclic graphs
 
-[![Build Status](https://travis-ci.org/marcelklehr/toposort.png)](https://travis-ci.org/marcelklehr/toposort)
+[![Build Status](https://travis-ci.org/marcelklehr/toposort.svg)](https://travis-ci.org/marcelklehr/toposort)
 
 ## Installation
 
@@ -11,7 +11,7 @@ Sort directed acyclic graphs
 then in your code:
 
 ```js
-toposort = require('toposort')
+const toposort = require('toposort')
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ We want to sort the following graph.
 
 ```js
 // First, we define our edges.
-var graph = [
+const graph = [
   ['put on your shoes', 'tie your shoes']
 , ['put on your shirt', 'put on your jacket']
 , ['put on your shorts', 'put on your jacket']
@@ -45,7 +45,7 @@ toposort(graph)
 It is usually more convenient to specify *dependencies* instead of "sequences".
 ```js
 // This time, edges represent dependencies.
-var graph = [
+const graph = [
   ['tie your shoes', 'put on your shoes']
 , ['put on your jacket', 'put on your shirt']
 , ['put on your shoes', 'put on your shorts']
