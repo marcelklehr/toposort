@@ -4,7 +4,11 @@
   "description": "Topological sort of directed ascyclic graphs (like dependecy lists)",
   "main": "src/main/js/index.js",
   "scripts": {
-    "test": "node src/test/js/index.js"
+    "style": "eslint src",
+    "style:fix": "yarn style --fix",
+    "verify": "yarn style && yarn test",
+    "test": "yarn test:unit",
+    "test:unit": "c8 -r html -r text -r lcov --exclude src/test uvu src/test/js"
   },
   "files": [
     "src/main",
@@ -17,6 +21,10 @@
     "url": "https://github.com/qiwi-forks/toposort.git"
   },
   "devDependencies": {
+    "c8": "^7.12.0",
+    "eslint": "^8.32.0",
+    "eslint-config-qiwi": "^2.0.8",
+    "typescript": "^4.9.4",
     "uvu": "^0.5.6"
   },
   "keywords": [

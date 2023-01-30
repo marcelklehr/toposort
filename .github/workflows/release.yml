@@ -1,0 +1,29 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.1.0
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v3.1.0
+        with:
+          node-version: 18
+      - name: Release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_USER: 'qiwibot'
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GIT_AUTHOR_EMAIL: 'opensource@qiwi.com'
+          GIT_COMMITTER_EMAIL: 'opensource@qiwi.com'
+          GIT_AUTHOR_NAME: 'QIWI Bot'
+          GIT_COMMITTER_NAME: 'QIWI Bot'
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+        run: npm_config_yes=true npx zx-semrel
