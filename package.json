@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Topological sort of directed ascyclic graphs (like dependecy lists)",
   "main": "src/main/js/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "style": "eslint src",
     "style:fix": "yarn style --fix",
