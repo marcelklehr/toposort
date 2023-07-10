@@ -1,6 +1,6 @@
 import { suite } from 'uvu'
 import assert from 'node:assert'
-import { toposortExtra } from '../../main/js/extra.js'
+import { toposortExtra } from '../../main/extra.js'
 import {
   oneComponentGraph,
   oneComponentGraphWithComplexLoop,
