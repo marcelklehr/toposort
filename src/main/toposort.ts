@@ -1,8 +1,8 @@
 import { makeNodesHash, makeOutgoingEdges, uniqueNodes } from './helpers.js'
 import { validateEdges } from './validators.js'
 
-function visitFactory(visited, outgoingEdges, nodesHash, sorted, cursor) {
-  function visit(node, i, predecessors) {
+function visitFactory(visited: Record<string, boolean>, outgoingEdges: Map<unknown, Set<unknown>>, nodesHash: Map<unknown, number>, sorted: any[], cursor: number) {
+  function visit(node: unknown, i: number, predecessors: Set<unknown>) {
     if (predecessors.has(node)) {
       let nodeRep
       try {
@@ -20,15 +20,15 @@ function visitFactory(visited, outgoingEdges, nodesHash, sorted, cursor) {
     if (visited[i]) return
     visited[i] = true
 
-    let outgoing = outgoingEdges.get(node) || new Set()
-    outgoing = [...outgoing]
+    const outgoingSet: (Set<unknown> | unknown[]) = outgoingEdges.get(node) || new Set()
+    const outgoing = [...outgoingSet]
     i = outgoing.length
 
     if (i) {
       predecessors.add(node)
       do {
-        const child = outgoing[--i]
-        visit(child, nodesHash.get(child), predecessors)
+        const child: any = outgoing[--i]
+        visit(child, nodesHash.get(child) as number, predecessors)
       } while (i)
       predecessors.delete(node)
     }
@@ -39,11 +39,11 @@ function visitFactory(visited, outgoingEdges, nodesHash, sorted, cursor) {
   return visit
 }
 
-export function toposortCore(nodes, edges) {
-  let cursor = nodes.length
+export function toposortCore(nodes: unknown[], edges: unknown[][]) {
+  const cursor = nodes.length
   let i = cursor
   const sorted = [cursor]
-  const visited = {}
+  const visited: Record<string, boolean> = {}
   const nodesHash = makeNodesHash(nodes)
   const outgoingEdges = makeOutgoingEdges(edges)
   const visit = visitFactory(visited, outgoingEdges, nodesHash, sorted, cursor)
@@ -55,13 +55,13 @@ export function toposortCore(nodes, edges) {
   return sorted
 }
 
-export function toposort(nodes, edges) {
+export function toposort(nodes: unknown[], edges: unknown[][]) {
   validateEdges(nodes, edges)
 
   return toposortCore(nodes, edges)
 }
 
-export function toposortDefault(edges) {
+export function toposortDefault(edges: unknown[][]) {
   return toposort(uniqueNodes(edges), edges)
 }
 

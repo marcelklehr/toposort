@@ -7,7 +7,7 @@ import {
 } from './helpers.js'
 import { validateEdges, validateArgs, validateDag } from './validators.js'
 
-export function toposortExtra (opts) {
+export function toposortExtra (opts: { edges: unknown[][]; throwOnCycle?: boolean; nodes?: unknown[] }) {
   validateArgs(opts)
 
   const nodes = opts.nodes || uniqueNodes(opts.edges)
@@ -36,4 +36,3 @@ export function toposortExtra (opts) {
       })
   }
 }
-

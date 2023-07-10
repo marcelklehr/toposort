@@ -1,16 +1,29 @@
 import { suite } from 'uvu'
-import { validateArgs, validateEdges, validateDag } from '../../main/js/validators.js'
+import { validateArgs, validateEdges, validateDag } from '../main/validators'
 import assert from 'node:assert'
 import {
   oneComponentGraph,
   oneComponentGraphWithComplexLoop,
   oneComponentGraphWithLoop, twoComponentGraph,
   twoComponentGraphWithLoop,
-} from './graphs.js'
+} from './graphs.test.js'
 
 const test = suite('validators')
 
-const validateArgsTestCases = [
+export type Input = [unknown[], unknown[][]]
+interface EdgeTestCase {
+  description: string
+  input: Input
+  throws: boolean
+}
+
+interface ArgsTestCase {
+  description: string
+  input?: { nodes?: unknown[], edges?: unknown[][]}
+  throws: boolean
+}
+
+const validateArgsTestCases: ArgsTestCase[] = [
   {
     description: 'it throws when there are no arguments',
     input: undefined,
@@ -33,15 +46,16 @@ const validateArgsTestCases = [
   },
 ]
 
-validateArgsTestCases.forEach(({ description, input, throws }) => test(description, () => {
+validateArgsTestCases.forEach(({ description, input, throws }: ArgsTestCase) => test(description, () => {
   if (throws) {
-    assert.throws(() => validateArgs(input))
+    assert.throws(() => validateArgs(input as any))
   } else {
-    validateArgs(input)
+    validateArgs(input as any)
   }
 }))
 
-const validateEdgesTestCases = [
+
+const validateEdgesTestCases: EdgeTestCase[] = [
   {
     description: 'it does not throw without unknown nodes',
     input: [[1, 2, 3], [[1, 2], [2, 3]]],
@@ -54,7 +68,8 @@ const validateEdgesTestCases = [
   }
 ]
 
-validateEdgesTestCases.forEach(({ description, input, throws }) => test(description, () => {
+
+validateEdgesTestCases.forEach(({ description, input, throws }: EdgeTestCase) => test(description, () => {
   if (throws) {
     assert.throws(() => validateEdges(...input))
   } else {
@@ -112,6 +127,5 @@ validateDagTestCases.forEach(({ description, graph, cycleNode, throws }) => {
     }
   })
 })
-
 
 test.run()

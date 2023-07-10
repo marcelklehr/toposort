@@ -14,7 +14,7 @@ export const oneComponentGraphWithLoop = [[6, 7], [6, 8], [9, 8], [7, 6]]
 // src/test/resources/graphs/one-component-with-complex-loop.svg
 export const oneComponentGraphWithComplexLoop = [[1, 3], [1, 2], [2, 4], [2, 5], [3, 2], [5, 6], [4, 9], [6, 7], [6, 8], [9, 8], [7, 1]]
 
-const getEdgesForNode = ({ prefix = '', i, j, maxI, maxJ }) => {
+const getEdgesForNode = ({ prefix = '', i, j, maxI, maxJ }: { prefix?: string, i: number, j: number, maxI: number, maxJ: number }) => {
   const node = `${prefix}${i}_${j}`
   const res = []
   if (i < maxI) {
@@ -30,7 +30,7 @@ const getEdgesForNode = ({ prefix = '', i, j, maxI, maxJ }) => {
 }
 
 // src/test/resources/graphs/dense-square.svg
-export const generateSquareDenseGraph = ({ width, height, prefix }) => {
+export const generateSquareDenseGraph = ({ width, height, prefix }: {width: number, height: number, prefix?: string}) => {
   const edges = []
 
   for(let i = 0; i < width; i++) {

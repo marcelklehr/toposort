@@ -1,5 +1,5 @@
 import { suite } from 'uvu'
-import { toposortDefault as toposort } from '../../main/js/toposort.js'
+import { toposortDefault as toposort } from '../main/toposort'
 import assert from 'node:assert'
 
 const oldTestSuites = {
@@ -21,9 +21,10 @@ const oldTestSuites = {
             , ['5', '4'],
           ])
       }
-      , 'should be sorted correctly': function (er, result) {
+      , 'should be sorted correctly': function (er: any, result: unknown) {
         assert.ok(Array.isArray(result))
-        var failed = [], passed
+        const failed: any[] = []
+        let passed = false
           // valid permutations
         ;[['3', '6', '5', '2', '1', '4']
           , ['3', '6', '5', '2', '4', '1']
@@ -56,7 +57,7 @@ const oldTestSuites = {
             , ['bar', 'foo'],// cyclic dependecy
           ])
       }
-      , 'should throw an exception': function (_, val) {
+      , 'should throw an exception': function (_: any, val: any) {
         assert.ok(val instanceof Error)
       },
     }
@@ -78,7 +79,7 @@ const oldTestSuites = {
             , ['ron', 'tom'],// cyclic dependecy
           ])
       }
-      , 'should throw an exception': function (_, val) {
+      , 'should throw an exception': function (_: any, val: any) {
         assert.ok(val instanceof Error)
       },
     }
@@ -93,7 +94,7 @@ const oldTestSuites = {
             , ['ron', 'tom'],
           ])
       }
-      , 'should throw an exception': function (_, val) {
+      , 'should throw an exception': function (_: any, val: any) {
         assert.ok(val instanceof Error)
       },
     }
@@ -111,7 +112,7 @@ const oldTestSuites = {
           , ['b', 'c'],
         ])
       }
-      , 'shouldn\'t throw an error': function (er, result) {
+      , 'shouldn\'t throw an error': function (er: any, result: unknown) {
         assert.deepEqual(result, ['a', 'b', 'c'])
       },
     }
@@ -120,8 +121,8 @@ const oldTestSuites = {
       topic: function () {
         return toposort.array(['d', 'c', 'a', 'b'], [['a', 'b'], ['b', 'c']])
       }
-      , 'should include unconnected nodes': function (er, result) {
-        var i = result.indexOf('d')
+      , 'should include unconnected nodes': function (er: any, result: Array<any>) {
+        const i = result.indexOf('d')
         assert(i >= 0)
         result.splice(i, 1)
         assert.deepEqual(result, ['a', 'b', 'c'])
@@ -130,41 +131,41 @@ const oldTestSuites = {
   , 'toposort.array mutation':
     {
       topic: function () {
-        var array = ['d', 'c', 'a', 'b']
+        const array = ['d', 'c', 'a', 'b']
         toposort.array(array, [['a', 'b'], ['b', 'c']])
         return array
       }
-      , 'should not mutate its arguments': function (er, result) {
+      , 'should not mutate its arguments': function (er: any, result: unknown) {
         assert.deepEqual(result, ['d', 'c', 'a', 'b'])
       },
     }
   , 'giant graphs':
     {
       topic: function () {
-        var graph = []
+        const graph = []
           , nodeCount = 100_000
-        for (var i = 0; i < nodeCount; i++) {
+        for (let i = 0; i < nodeCount; i++) {
           graph.push([i, i + 1])
         }
         return graph
       }
       , 'should sort quickly': function () {
-        var start = Date.now()
-        var end = Date.now()
-        var elapsedSeconds = (end - start) / 1000
+        const start = Date.now()
+        const end = Date.now()
+        const elapsedSeconds = (end - start) / 1000
         assert(elapsedSeconds < 1)
       },
     }
   , 'object keys':
     {
       topic: function () {
-        var o1 = { k1: 'v1', nested: { k2: 'v2' } }
-        var o2 = { k2: 'v2' }
-        var o3 = { k3: 'v3' }
+        const o1 = { k1: 'v1', nested: { k2: 'v2' } }
+        const o2 = { k2: 'v2' }
+        const o3 = { k3: 'v3' }
         return [[o1, o2], [o2, o3]]
       }
-      , 'should handle object nodes': function (er, result) {
-        var sorted = toposort(result)
+      , 'should handle object nodes': function (er: any, result: any) {
+        const sorted = toposort(result)
         assert.deepEqual(sorted, [{ k1: 'v1', nested: { k2: 'v2' } }, { k2: 'v2' }, { k3: 'v3' }])
       },
     },
@@ -175,7 +176,7 @@ Object.entries(oldTestSuites).forEach(([name, data]) => {
   const test = suite(name)
 
   Object.entries(rest).forEach(([description, fn]) => {
-    let res, err
+    let res: any, err: unknown
     try {
       res = topic()
     } catch (e) {

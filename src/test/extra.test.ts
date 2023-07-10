@@ -1,21 +1,21 @@
 import { suite } from 'uvu'
 import assert from 'node:assert'
-import { toposortExtra } from '../../main/extra.js'
+import { toposortExtra } from '../main/extra.js'
 import {
   oneComponentGraph,
   oneComponentGraphWithComplexLoop,
   twoComponentGraph,
   twoComponentGraphWithLoop,
   generateSquareDenseGraph,
-} from './graphs.js'
+} from './graphs.test.js'
 
 const test = suite('array')
 
-const normalizeToposortExtraResult = (res) => {
+const normalizeToposortExtraResult = (res: { sources: any; prev: any; next: any; graphs: any }) => {
   res.sources.sort()
-  res.prev.forEach(value => value.sort())
-  res.next.forEach(value => value.sort())
-  res.graphs.forEach(graph => {
+  res.prev.forEach((value: any[]) => value.sort())
+  res.next.forEach((value: any[]) => value.sort())
+  res.graphs.forEach((graph: { nodes: any[]; sources: any[] }) => {
     graph.nodes.sort()
     graph.sources.sort()
   })

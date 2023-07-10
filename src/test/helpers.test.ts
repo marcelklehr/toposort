@@ -6,14 +6,14 @@ import {
   uniqueNodes,
   getAdjacencyMapOfIndirectedGraph,
   visitDepthFirst,
-} from '../../main/js/helpers.js'
+} from '../main/helpers'
 import {
   oneComponentGraphWithLoop,
   twoComponentGraph,
   oneComponentGraph,
   twoComponentGraphWithLoop,
   generateSquareDenseGraph,
-} from './graphs.js'
+} from './graphs.test.js'
 
 const test = suite('helpers')
 
